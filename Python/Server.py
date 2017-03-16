@@ -87,8 +87,8 @@ class Server:
 
         turtle.mainloop()
 
-def main():
-    server = Server('localhost',8787)
+def main(argv):
+    server = Server(argv[1],38787)
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv)
