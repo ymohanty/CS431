@@ -33,27 +33,23 @@ class Client:
 
 def main(argv):
     l = []
-    command = []
-    i = 0
     while True:
         print l
         try:
-            if i%2 == 0:
-                command.append(raw_input().strip())
-            else:
-                command.append(int(raw_input()))
-                l.append(command)
-                command = []
+            string = raw_input("Enter Command-Value pair: ")
+            command = string.split(',')[0]
+            value = int(string.split(',')[1])
+            l.append([command,value])
 
             if len(l) >1 and l[-1][0] == "END":
                 break
-            i += 1
+
         except ValueError:
             print "Input command-value pairs only!"
 
     print l
 
-    client = Client('localhost',38787,json.dumps(l))
+    client = Client(argv[1],38787,json.dumps(l))
     client.send_data()
 
 if __name__ == '__main__':
