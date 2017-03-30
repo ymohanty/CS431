@@ -33,7 +33,7 @@ class BTListener:
                 break
 
             pair = [command, value]
-            self.append(pair)
+            self.data.append(pair)
 
     def get_data(self):
         return self.data
