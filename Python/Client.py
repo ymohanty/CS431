@@ -25,21 +25,22 @@ class BTListener:
 
     def run(self):
         while True:
-            cmd = raw_input("Enter robot movement commands: ")
+            cmdInput = raw_input("Enter robot movement commands: ")
+            command = ""
+            if cmdInput != "":
+                self.sock.sendall(cmdInput)
 
-            if cmd != "":
-                self.sock.sendall(cmd)
-
-            string = self.file.readline()
-            command = string.split(',')[0]
-            value = int(string.split('.')[1])
-
-            if command == "END":
-                self.sock.close()
-                break
-
-            pair = [command, value]
-            self.data.append(pair)
+            try:
+                if command == "END":
+                    self.sock.close()
+                    break
+                string = self.file.readline()
+                command = string.split(',')[0]
+                value = int(string.split('.')[1])
+                pair = [command, value]
+                self.data.append(pair)
+            except socket.error:
+                pass
 
     def get_data(self):
         return self.data
@@ -94,7 +95,7 @@ class Client:
 def main(argv):
     print "Creating bluetooth listener...\n"
     listener = BTListener()
-    print "Listening for bluetooth transmissions from %s on port %d" % (listener.host,listener.port)
+    print "Listening for bluetooth transmissions from %s on port %d" % (listener.host, listener.port)
     listener.run()
     data = listener.get_data()
 
