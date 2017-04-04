@@ -31,16 +31,24 @@ class BTListener:
                 self.sock.sendall(cmdInput)
 
             try:
-                if command == "END":
-                    self.sock.close()
-                    break
-                string = self.file.readline()
-                command = string.split(',')[0]
-                value = int(string.split('.')[1])
-                pair = [command, value]
-                self.data.append(pair)
+                string = self.sock.recv(1024)
+                if len(string) <= 1:
+                    print string
+                    print "String length issue!"
+
+                else:
+                    print "RECV: " + string
+                    command = string.split(',')[0].strip()
+                    value = float(string.split(',')[1])
+                    if command == "END":
+                        print "Ending..."
+                        self.sock.close()
+                        break
+                    pair = [command, value]
+                    self.data.append(pair)
+                    print self.data
             except socket.error:
-                pass
+                print "Socket error"
 
     def get_data(self):
         return self.data
@@ -99,7 +107,9 @@ def main(argv):
     listener.run()
     data = listener.get_data()
 
-    client = Client(argv[1], argv[2], data)
+    client = Client(argv[1], int(argv[2]))
+    client.add(data)
+    client.send_data()
 
 
 if __name__ == '__main__':
