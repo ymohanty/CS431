@@ -19,11 +19,17 @@ class BTListener:
         self.port = 3
         self.sock = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
         self.sock.connect((self.host, self.port))
+        self.sock.setblocking(0)
         self.file = self.sock.makefile()
         self.data = []
 
     def run(self):
         while True:
+            cmd = raw_input("Enter robot movement commands: ")
+
+            if cmd != "":
+                self.sock.sendall(cmd)
+
             string = self.file.readline()
             command = string.split(',')[0]
             value = int(string.split('.')[1])
