@@ -16,6 +16,7 @@ class Server:
         self.host = host
         self.port = port
         self.data = None
+        self.scale = 1
 
         try:
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -56,14 +57,25 @@ class Server:
         self.data = json.loads(string)
         self.draw_data()
 
+    def set_scale(self):
+        if self.data is not None:
+            sum = 0
+            for item in self.data:
+                if item[0] == "forward":
+                    sum += item[1]
+
+            self.scale = 500/sum
+
     def draw_data(self):
+        self.set_scale()
+
         turtle.left(90)
         turtle.speed(1)
 
         turtle.dot(10)
         for item in self.data:
             if item[0] == "forward":
-                turtle.forward(item[1])
+                turtle.forward(self.scale*item[1])
 
             elif item[0] == "right":
                 turtle.right(item[1])
